@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Momo+Trust+Display&family=Parkinsans:wght@300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Slab:wght@100..900&display=swap"
+        rel="stylesheet">
+    <title>Registration Form</title>
+    <style>
+        body {
+            font-family: poppins;
+            background: #e4f1ff;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            background: #f3f3f3;
+            padding: 20px;
+            margin: auto;
+            border-radius: 8px;
+            box-shadow: rgb(0 0 0 / 49%) 0px 7px 29px 0px;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        label {
+            display: block;
+            margin-top: 12px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        input,
+        select {
+            padding: 8px;
+            margin: 10px;
+            font-family: poppins;
+            text-align: center;
+        }
+
+        .error {
+            color: red;
+            font-size: 13px;
+        }
+
+        button {
+            width: 50%;
+            padding: 10px;
+            margin-top: 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px;
+            font-family: poppins;
+            font-size: 15px;
+        }
+
+        button:disabled {
+            background: gray;
+            cursor: not-allowed;
+        }
+
+        .summary {
+            margin-top: 20px;
+            padding: 15px;
+            background: #dbffdb;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Registration Form</h2>
+        <form id="regForm">
+
+            <label>First Name</label>
+            <input type="text" id="fname">
+            <div class="error" id="fnameError"></div>
+
+            <label>Last Name</label>
+            <input type="text" id="lname">
+
+            <label>Surname / Family Name</label>
+            <input type="text" id="sname">
+
+            <label>Email</label>
+            <input type="text" id="email">
+            <div class="error" id="emailError"></div>
+
+            <label>Password</label>
+            <input type="password" id="password">
+            <div class="error" id="passwordError"></div>
+
+            <label>Confirm Password</label>
+            <input type="password" id="cpassword">
+            <div class="error" id="cpasswordError"></div>
+
+            <label>Gender</label>
+            <div class="gender div">
+                <input type="radio" name="gender" value="Male"> Male
+                <input type="radio" name="gender" value="Female"> Female
+            </div>
+            <div class="error" id="genderError"></div>
+
+            <label>Country</label>
+            <select id="country">
+                <option value="">Select Country</option>
+                <option value="Pakistan">Pakistan</option>
+                <option value="USA">USA</option>
+                <option value="UK">UK</option>
+            </select>
+            <div class="error" id="countryError"></div>
+
+            <label>
+                <input type="checkbox" id="terms"> I agree to Terms and Conditions
+            </label>
+            <div class="error" id="termsError"></div>
+
+            <button type="submit" id="submitBtn" disabled>Submit</button>
+        </form>
+
+        <div id="summary"></div>
+    </div>
+
+    <script>
+        const fname = document.getElementById('fname');
+        const email = document.getElementById('email');
+        const password = document.getElementById('password');
+        const cpassword = document.getElementById('cpassword');
+        const country = document.getElementById('country');
+        const terms = document.getElementById('terms');
+        const submitBtn = document.getElementById('submitBtn');
+        const form = document.getElementById('regForm');
+
+        function validateForm() {
+            let valid = true;
+
+            if (fname.value.length < 5) {
+                fnameError.textContent = "First name must be at least 5 characters";
+                valid = false;
+            } else {
+                fnameError.textContent = "";
+            }
+
+            if (!email.value.includes('@')) {
+                emailError.textContent = "Email must contain @";
+                valid = false;
+            } else {
+                emailError.textContent = "";
+            }
+
+            const passRegex = /^(?=.*[A-Z]).{8,}$/;
+            if (!passRegex.test(password.value)) {
+                passwordError.textContent = "Password must be 8 characters and 1 uppercase";
+                valid = false;
+            } else {
+                passwordError.textContent = "";
+            }
+
+            if (password.value !== cpassword.value || cpassword.value === "") {
+                cpasswordError.textContent = "Passwords do not match";
+                valid = false;
+            } else {
+                cpasswordError.textContent = "";
+            }
+
+            const gender = document.querySelector('input[name="gender"]:checked');
+            if (!gender) {
+                genderError.textContent = "Please select gender";
+                valid = false;
+            } else {
+                genderError.textContent = "";
+            }
+
+            if (country.value === "") {
+                countryError.textContent = "Please select country";
+                valid = false;
+            } else {
+                countryError.textContent = "";
+            }
+
+            if (!terms.checked) {
+                termsError.textContent = "You must accept terms";
+                valid = false;
+            } else {
+                termsError.textContent = "";
+            }
+
+            submitBtn.disabled = !valid;
+            return valid;
+        }
+
+        document.querySelectorAll('input, select').forEach(el => {
+            el.addEventListener('input', validateForm);
+            el.addEventListener('change', validateForm);
+        });
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            if (validateForm()) {
+                const gender = document.querySelector('input[name="gender"]:checked').value;
+
+                const summaryDiv = document.getElementById('summary');
+                summaryDiv.classList.add('summary');
+                summaryDiv.innerHTML = `
+                <h3>Registration Successful</h3>
+                <p><strong>Name:</strong> ${fname.value}</p>
+                <p><strong>Email:</strong> ${email.value}</p>
+                <p><strong>Country:</strong> ${country.value}</p>
+                <p><strong>Gender:</strong> ${gender}</p>
+            `;
+            }
+        });
+    </script>
+
+</body>
+
+</html>
